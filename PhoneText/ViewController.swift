@@ -20,33 +20,41 @@ class ViewController: UIViewController {
 extension ViewController : UITextFieldDelegate
 {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
+
         guard CharacterSet(charactersIn: "0123456789").isSuperset(of: CharacterSet(charactersIn: string)) else {
             return false
         }
         if let text = textField.text {
             let newLength = text.count + string.count - range.length
             let newText = text + string
-            
+
             if string == ""
             {
                 return true
             }
-            
+
             let textFieldText: NSString = (textField.text ?? "") as NSString
             let txtAfterUpdate = textFieldText.replacingCharacters(in: range, with: string)
             if(newLength <= 15){
-                
+
                 let addSpaceLength:Int = (txtAfterUpdate.applyPatternOnNumbers().count - (textField.text?.count)!)
                 var selectedText:String = textField.text(in: textField.selectedTextRange!)!
                 var extraSpace = ""
+
+                if addSpaceLength > 0
+                {
                 for i in 1...addSpaceLength
                 {
                     extraSpace = "\(extraSpace) "
                 }
+            }
+                else
+                {
+                    selectedText = ""
+                }
                 selectedText = "\(selectedText)\(extraSpace)"
                 textField.replace(textField.selectedTextRange!, withText: selectedText)
-                
+
                 let newPosition = textField.selectedTextRange
                 textField.text = txtAfterUpdate.applyPatternOnNumbers()
                 textField.selectedTextRange = newPosition
@@ -56,8 +64,8 @@ extension ViewController : UITextFieldDelegate
         }
         return true
     }
-    
-    
+
+
 }
 
 extension String
@@ -74,4 +82,3 @@ extension String
         return pureNumber
     }
 }
-
